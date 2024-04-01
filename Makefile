@@ -10,7 +10,7 @@ POSTGRES_VERSION=postgres:12-alpine
 POSTGRES_VOLUME=pgdata:/var/run/postgresql/data
 
 
-postgres:
+db.cotainer:
 	docker run --name ${CONTAINER} -p ${DB_PORT}:${DB_PORT} -e POSTGRES_PASSWORD=${DB_PASSWORD} -e POSTGRES_USER=${DB_USER} -d ${POSTGRES_VERSION}
 
 db.create:
