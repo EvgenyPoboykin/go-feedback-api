@@ -10,6 +10,7 @@ import (
 )
 
 func UpdateIsseu(id string, comment string, status string) (*schema.Issue, error) {
+
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 

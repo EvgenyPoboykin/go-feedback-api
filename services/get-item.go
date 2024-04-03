@@ -9,6 +9,7 @@ import (
 )
 
 func GetIsseu(id string) (*schema.Issue, error) {
+
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 

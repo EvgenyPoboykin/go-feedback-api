@@ -10,6 +10,7 @@ import (
 )
 
 func CreateIsseu(uri string, image string, description string, clientId string, clientName string) (*schema.Issue, error) {
+
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 

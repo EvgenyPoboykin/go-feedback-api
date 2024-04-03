@@ -9,6 +9,7 @@ import (
 )
 
 func GetOptionByValue(value string) (*schema.IssuesStatus, error) {
+
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 

@@ -13,6 +13,7 @@ import (
 )
 
 func Update(w http.ResponseWriter, r *http.Request) {
+
 	role := r.Context().Value("oauth.role").(string)
 	if role == constant.Employee_server {
 		helpers.ErrorResponse(w, http.StatusConflict, constant.NO_CREDENTIAL, constant.ResponseMessage_AccessDenied)

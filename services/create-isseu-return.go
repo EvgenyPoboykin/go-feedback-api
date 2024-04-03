@@ -9,6 +9,7 @@ import (
 )
 
 func CreateIsseuReturn(uri string, image string, description string) (*schema.Issue, error) {
+
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 

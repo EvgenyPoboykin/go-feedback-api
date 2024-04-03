@@ -11,6 +11,7 @@ import (
 )
 
 func List(w http.ResponseWriter, r *http.Request) {
+
 	role := r.Context().Value("oauth.role").(string)
 	clientId := r.Context().Value("oauth.clientId").(string)
 
