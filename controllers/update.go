@@ -14,7 +14,6 @@ import (
 
 func Update(w http.ResponseWriter, r *http.Request) {
 	role := r.Context().Value("oauth.role").(string)
-
 	if role == constant.Employee_server {
 		helpers.ErrorResponse(w, http.StatusConflict, constant.NO_CREDENTIAL, constant.ResponseMessage_AccessDenied)
 
@@ -26,7 +25,6 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
 	err := json.NewDecoder(r.Body).Decode(&body)
-
 	if err != nil {
 		helpers.ErrorResponse(w, http.StatusServiceUnavailable, constant.SERVICE_PARSE, constant.ResponseMessage_ServiceBodyParser)
 
@@ -35,7 +33,6 @@ func Update(w http.ResponseWriter, r *http.Request) {
 
 	if string(body.Status) != `` {
 		_, errorStatus := services.GetOptionByValue(body.Status)
-
 		if errorStatus != nil {
 			helpers.ErrorResponse(w, http.StatusServiceUnavailable, constant.SERVICE_VAliDATE, constant.ResponseMessage_UpdateStatusError)
 

@@ -12,7 +12,6 @@ import (
 func Options(w http.ResponseWriter, r *http.Request) {
 
 	options, err := services.GetOptions()
-
 	if err != nil {
 		helpers.ErrorResponse(w, http.StatusServiceUnavailable, constant.SERVICE_RETURN, constant.ResponseMessage_OptionsError)
 

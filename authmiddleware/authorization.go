@@ -69,7 +69,6 @@ func Auth(next http.Handler) http.Handler {
 		w.Header().Set("Content-Type", "application/json")
 
 		authorizationHeader := r.Header.Get("Authorization")
-
 		if len(authorizationHeader) == 0 {
 			helpers.ErrorResponse(w, http.StatusUnauthorized, constant.NOT_AUTHORIZED, constant.ResponseMessage_AuthHeaderError)
 
@@ -92,7 +91,6 @@ func Auth(next http.Handler) http.Handler {
 
 		accessToken := fields[1]
 		userInfo := ParseToken(accessToken)
-
 		if userInfo == nil {
 			helpers.ErrorResponse(w, http.StatusServiceUnavailable, constant.NOT_AUTHORIZED, constant.ResponseMessage_NotAuthorizedError)
 
@@ -100,7 +98,6 @@ func Auth(next http.Handler) http.Handler {
 		}
 
 		roleValue := getRole(*userInfo)
-
 		if roleValue == "" {
 			helpers.ErrorResponse(w, http.StatusServiceUnavailable, constant.NOT_AUTHORIZED, constant.ResponseMessage_NotAuthorizedError)
 

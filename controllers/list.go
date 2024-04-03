@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/eugenepoboykin/go-feedback-api/constant"
@@ -20,7 +19,6 @@ func List(w http.ResponseWriter, r *http.Request) {
 	var empty = make([]schema.Issue, 0)
 
 	err := json.NewDecoder(r.Body).Decode(&body)
-
 	if err != nil {
 		helpers.ErrorResponse(w, http.StatusServiceUnavailable, constant.SERVICE_PARSE, constant.ResponseMessage_ServiceBodyParser)
 
@@ -33,11 +31,8 @@ func List(w http.ResponseWriter, r *http.Request) {
 	page.PageSize = body.PageSize
 	page.Status = body.Status
 
-	fmt.Println("-----", page.Status, &page.Status, "------")
-
 	if string(body.Status) != `` {
 		_, errorStatus := services.GetOptionByValue(string(body.Status))
-
 		if errorStatus != nil {
 			helpers.ErrorResponse(w, http.StatusServiceUnavailable, constant.SERVICE_VAliDATE, constant.ResponseMessage_UpdateStatusError)
 
@@ -47,7 +42,6 @@ func List(w http.ResponseWriter, r *http.Request) {
 
 	if role == constant.Employee {
 		isseus, err := services.GetListEmployee(clientId)
-
 		if err != nil {
 			helpers.ErrorResponse(w, http.StatusServiceUnavailable, constant.SERVICE_RETURN, constant.ResponseMessage_ListError)
 
@@ -70,7 +64,6 @@ func List(w http.ResponseWriter, r *http.Request) {
 	}
 
 	isseus, err := services.GetListAll()
-
 	if err != nil {
 		helpers.ErrorResponse(w, http.StatusServiceUnavailable, constant.SERVICE_RETURN, constant.ResponseMessage_ListError)
 

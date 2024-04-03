@@ -26,7 +26,6 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	errorMessage := helpers.CreateBodyParse(w, r, &body)
-
 	if errorMessage != nil {
 		helpers.ErrorResponse(w, errorMessage.Status, errorMessage.Type, errorMessage.Description)
 

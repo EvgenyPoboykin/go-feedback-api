@@ -16,7 +16,6 @@ func Item(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
 	isseu, err := services.GetIsseu(id)
-
 	if err != nil {
 		helpers.ErrorResponse(w, http.StatusBadRequest, constant.BAD_REQUEST, constant.ResponseMessage_NotFoundIsseu+id)
 
