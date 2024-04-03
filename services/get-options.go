@@ -1,17 +1,15 @@
 package services
 
 import (
-	"context"
-
 	"github.com/eugenepoboykin/go-feedback-api/constant"
 	"github.com/eugenepoboykin/go-feedback-api/helpers"
 	"github.com/eugenepoboykin/go-feedback-api/schema"
+	"github.com/eugenepoboykin/go-feedback-api/utils"
 )
 
 func GetOptions() ([]schema.IssuesStatus, error) {
 
-	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
-	defer cancel()
+	ctx := utils.Ctx()
 
 	var statuses []schema.IssuesStatus
 

@@ -1,18 +1,17 @@
 package services
 
 import (
-	"context"
 	"time"
 
 	"github.com/eugenepoboykin/go-feedback-api/constant"
 	"github.com/eugenepoboykin/go-feedback-api/helpers"
 	"github.com/eugenepoboykin/go-feedback-api/schema"
+	"github.com/eugenepoboykin/go-feedback-api/utils"
 )
 
 func UpdateIsseu(id string, comment string, status string) (*schema.Issue, error) {
 
-	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
-	defer cancel()
+	ctx := utils.Ctx()
 
 	query := /* sql */ `UPDATE isseus SET comment=$1, isseu_status=$2, updated_at=$3 WHERE id = $4`
 
