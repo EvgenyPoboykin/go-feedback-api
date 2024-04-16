@@ -1,44 +1,36 @@
 package server
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 
-	"github.com/eugenepoboykin/go-feedback-api/authmiddleware"
-	"github.com/eugenepoboykin/go-feedback-api/constant"
-	"github.com/eugenepoboykin/go-feedback-api/db"
-	"github.com/eugenepoboykin/go-feedback-api/helpers"
+	"github.com/eugenepoboykin/go-feedback-api/internal/connection"
+	"github.com/eugenepoboykin/go-feedback-api/internal/env"
+	"github.com/eugenepoboykin/go-feedback-api/internal/mw"
+	"github.com/eugenepoboykin/go-feedback-api/internal/pool"
 	"github.com/eugenepoboykin/go-feedback-api/router"
-	"github.com/eugenepoboykin/go-feedback-api/services"
-	"github.com/eugenepoboykin/go-feedback-api/utils"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/spf13/viper"
 )
 
 func Start() {
-	postgres, err := db.Connect(utils.GetEnv("SUPPORT_SERVICE_CONNECT_DATABASE_URL", constant.DefaultDsn))
 
-	if err != nil {
-		helpers.Log.ErrorLog.Fatal("Cannot connect database!")
+	enviroment := env.NewEnv()
 
-		return
-	}
+	conn := connection.NewDBConnection("postgres", enviroment.DSN)
+	DB := conn.DBConnection()
 
-	defer postgres.DB.Close(context.Background())
-
-	services.New(postgres.DB)
+	pool.SetBDPool(DB)
 
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
-	r.Use(authmiddleware.Auth)
+	r.Use(mw.Auth)
 
 	router.Support(r)
 
-	http.ListenAndServe(viper.GetString("port"), r)
+	http.ListenAndServe(enviroment.AppPort, r)
 
-	fmt.Printf("Start Server")
+	fmt.Printf("Start Server on port " + enviroment.AppPort)
 }
