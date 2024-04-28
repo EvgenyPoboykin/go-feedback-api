@@ -1,6 +1,10 @@
 package connection
 
-import "database/sql"
+import (
+	"database/sql"
+
+	_ "github.com/lib/pq"
+)
 
 func (c *Connection) DBConnection() *sql.DB {
 	db, err := c.ConnectToDB()

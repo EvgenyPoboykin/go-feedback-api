@@ -7,7 +7,7 @@ import (
 
 var dbPool *sql.DB
 
-func SetBDPool(db *sql.DB) {
+func SetPool(db *sql.DB) {
 	db.SetMaxOpenConns(25)
 	db.SetMaxIdleConns(25)
 	db.SetConnMaxLifetime(5 * time.Minute)
@@ -15,6 +15,6 @@ func SetBDPool(db *sql.DB) {
 	dbPool = db
 }
 
-func GetBDPool() *sql.DB {
+func GetPool() *sql.DB {
 	return dbPool
 }

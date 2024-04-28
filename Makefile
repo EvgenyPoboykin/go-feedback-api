@@ -32,10 +32,10 @@ migrations.create:
 	sqlx migrate add -r init
 
 migrations.up:
-	sqlx migrate run --database-url ${SUPPORT_SERVICE_CONNECT_DATABASE_URL}
+	sqlx migrate run --database-url ${DSN}
 
 migrations.down:
-	sqlx migrate revert --database-url ${SUPPORT_SERVICE_CONNECT_DATABASE_URL}
+	sqlx migrate revert --database-url ${DSN}
 
 binary.build:
 	if [ -f "./build/${APP_NAME}" ]; then \

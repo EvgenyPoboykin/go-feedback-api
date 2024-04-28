@@ -22,6 +22,7 @@ func Response[T interface{}](w http.ResponseWriter, data *T) {
 
 	if errMarshall != nil {
 		ErrorResponse(w, http.StatusInsufficientStorage, SERVICE_VAliDATE, ResponseMessage_ServerReturnError)
+
 		return
 	}
 

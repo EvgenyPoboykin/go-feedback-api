@@ -1,12 +1,14 @@
 package endpoints
 
+import "fmt"
+
 type Api struct {
 	BaseUrl string
 }
 
 func NewApiVersion(version string) *Api {
 	return &Api{
-		BaseUrl: "/" + "api" + "/" + version,
+		BaseUrl: fmt.Sprintf("/api/%s", version),
 	}
 }
 

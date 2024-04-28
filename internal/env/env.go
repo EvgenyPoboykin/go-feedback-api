@@ -1,6 +1,7 @@
 package env
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -27,7 +28,7 @@ func NewEnv() *Env {
 		log.Fatal(".env config not found!")
 	}
 
-	dsn := checkEnv("DSN")
+	dbHost := checkEnv("DB_HOST")
 	dbName := checkEnv("DB_NAME")
 	dbUser := checkEnv("DB_USER")
 	dbPassword := checkEnv("DB_PASSWORD")
@@ -40,8 +41,12 @@ func NewEnv() *Env {
 	adminRole := checkEnv("SUPPORT_SERVICE_ROLE_ADMIN")
 	employeeRole := checkEnv("SUPPORT_SERVICE_ROLE_USER")
 
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
+		"password=%s dbname=%s sslmode=%s",
+		dbHost, dbPort, dbUser, dbPassword, dbName, dbSSL)
+
 	Enviroment = &Env{
-		DSN:        dsn,
+		DSN:        psqlInfo,
 		DbName:     dbName,
 		DbUser:     dbUser,
 		DbPassword: dbPassword,
@@ -58,9 +63,9 @@ func NewEnv() *Env {
 }
 
 func checkEnv(value string) string {
-	value, ok := os.LookupEnv("DSN")
+	value = os.Getenv(value)
 
-	if !ok {
+	if value == "" {
 		log.Fatalf("in .env config not found require key %s!", value)
 	}
 

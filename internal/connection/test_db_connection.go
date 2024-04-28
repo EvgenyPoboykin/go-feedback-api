@@ -6,6 +6,8 @@ import (
 	"fmt"
 
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
 const (
