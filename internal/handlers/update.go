@@ -1,9 +1,10 @@
 package handlers
 
 import (
+	"context"
 	"net/http"
+	"time"
 
-	"github.com/eugenepoboykin/go-feedback-api/internal/lib/ctx"
 	"github.com/eugenepoboykin/go-feedback-api/internal/lib/response"
 	"github.com/eugenepoboykin/go-feedback-api/internal/validator"
 
@@ -11,6 +12,8 @@ import (
 )
 
 func (as ApiSettings) Update(w http.ResponseWriter, r *http.Request) {
+	c, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	defer cancel()
 
 	role := r.Context().Value("oauth.role").(string)
 	if role == Employee {
@@ -28,8 +31,6 @@ func (as ApiSettings) Update(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-
-	c := ctx.Ctx()
 
 	if string(body.Status) != `` {
 		_, errorStatus := as.conn.GetOptionByValue(c, body.Status)

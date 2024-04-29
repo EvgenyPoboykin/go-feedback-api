@@ -1,8 +1,6 @@
 package router
 
 import (
-	"fmt"
-
 	"github.com/eugenepoboykin/go-feedback-api/internal/endpoints"
 	"github.com/eugenepoboykin/go-feedback-api/internal/handlers"
 	"github.com/eugenepoboykin/go-feedback-api/internal/pool"
@@ -12,12 +10,10 @@ import (
 )
 
 func Support(r chi.Router) {
-	storage := pg.NewPostgresRepo(pool.GetPool())
-
 	endpoints := endpoints.NewApiVersion("v1")
 
+	storage := pg.NewPostgresRepo(pool.GetPool())
 	h := handlers.NewApi(storage)
-	fmt.Print(h)
 
 	r.Post(endpoints.ListAdmin(), h.ListAdmin)
 	r.Post(endpoints.ListEmployee(), h.ListEmployee)

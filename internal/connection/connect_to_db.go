@@ -8,16 +8,17 @@ import (
 
 func (c *Connection) ConnectToDB() (*DBConnection, error) {
 
-	DB, err := sql.Open(c.DriverName, c.DSN)
+	db, err := sql.Open(c.DriverName, c.DSN)
+
 	if err != nil {
 		return nil, err
 	}
 
-	if err = c.TestDBConnection(DB); err != nil {
+	if err = c.TestDBConnection(db); err != nil {
 		return nil, err
 	}
 
 	return &DBConnection{
-		DB: DB,
+		DB: db,
 	}, nil
 }

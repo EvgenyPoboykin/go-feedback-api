@@ -1,14 +1,17 @@
 package handlers
 
 import (
+	"context"
 	"net/http"
+	"time"
 
-	"github.com/eugenepoboykin/go-feedback-api/internal/lib/ctx"
 	"github.com/eugenepoboykin/go-feedback-api/internal/lib/response"
 	"github.com/eugenepoboykin/go-feedback-api/internal/validator"
 )
 
 func (as ApiSettings) Create(w http.ResponseWriter, r *http.Request) {
+	c, cancel := context.WithTimeout(context.Background(), time.Second*3)
+	defer cancel()
 
 	role := r.Context().Value("oauth.role").(string)
 	if role == Admin {
@@ -25,7 +28,6 @@ func (as ApiSettings) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c := ctx.Ctx()
 	res, err := as.conn.AddIssueItem(c, *body)
 	if err != nil {
 		response.ErrorResponse(w, http.StatusBadGateway, SERVICE_CREATE_ISSEU, ResponseMessage_NotCreateIsseu)
