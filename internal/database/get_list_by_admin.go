@@ -7,42 +7,40 @@ import (
 )
 
 func (r *IssueRepository) GetListByAdmin(ctx context.Context) (*[]models.Issue, error) {
-	var isseus []models.Issue
+	var issues []models.Issue
 
 	stmt, errStmt := r.DB.Prepare(queryListByAdmin)
 
 	if errStmt != nil {
-		r.Log.Printf(Log_ErrorInsert, errStmt)
 		return nil, errStmt
 	}
 
 	rows, err := stmt.QueryContext(ctx)
 	if err != nil {
-		r.Log.Printf(Log_ErrorSelect, err)
 		return nil, err
 	}
 
 	for rows.Next() {
-		var isseu models.Issue
+		var issue models.Issue
 
 		err := rows.Scan(
-			&isseu.Id,
-			&isseu.Uri,
-			&isseu.Image64,
-			&isseu.Description,
-			&isseu.Comment,
-			&isseu.Status,
-			&isseu.Created,
-			&isseu.Updated,
-			&isseu.ClientId,
-			&isseu.ClientName,
+			&issue.Id,
+			&issue.Uri,
+			&issue.Image64,
+			&issue.Description,
+			&issue.Comment,
+			&issue.Status,
+			&issue.Created,
+			&issue.Updated,
+			&issue.ClientId,
+			&issue.ClientName,
 		)
 		if err != nil {
 			return nil, err
 		}
 
-		isseus = append(isseus, isseu)
+		issues = append(issues, issue)
 	}
 
-	return &isseus, nil
+	return &issues, nil
 }

@@ -20,8 +20,8 @@ func (as ApiSettings) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	validatoion := validator.NewValidtor(r.Body)
-	body, validationError := validatoion.CheckAddAgrs()
+	validation := validator.NewValidator(r.Body)
+	body, validationError := validation.CheckAddArgs()
 	if validationError != nil {
 		response.ErrorResponse(w, validationError.Status, validationError.Type, validationError.Description)
 
@@ -30,7 +30,7 @@ func (as ApiSettings) Create(w http.ResponseWriter, r *http.Request) {
 
 	res, err := as.conn.AddIssueItem(c, *body)
 	if err != nil {
-		response.ErrorResponse(w, http.StatusBadGateway, SERVICE_CREATE_ISSEU, ResponseMessage_NotCreateIsseu)
+		response.ErrorResponse(w, http.StatusBadGateway, SERVICE_CREATE_ISSUE, ResponseMessage_NotCreateIssue)
 
 		return
 	}

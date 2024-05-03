@@ -10,10 +10,10 @@ type Loggers struct {
 	ErrorLog *log.Logger
 }
 
-var infiLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+var infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 var errorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 var Log = &Loggers{
-	InfoLog:  infiLog,
+	InfoLog:  infoLog,
 	ErrorLog: errorLog,
 }

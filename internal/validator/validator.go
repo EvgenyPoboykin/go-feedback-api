@@ -12,13 +12,13 @@ type Validator struct {
 	Body io.ReadCloser
 }
 
-func NewValidtor(body io.ReadCloser) *Validator {
+func NewValidator(body io.ReadCloser) *Validator {
 	return &Validator{
 		Body: body,
 	}
 }
 
-func (v *Validator) CheckAddAgrs() (*models.AddIssueArgs, *models.ErrorMessage) {
+func (v *Validator) CheckAddArgs() (*models.AddIssueArgs, *models.ErrorMessage) {
 	var body models.AddIssueArgs
 	err := json.NewDecoder(v.Body).Decode(&body)
 
@@ -49,7 +49,7 @@ func (v *Validator) CheckAddAgrs() (*models.AddIssueArgs, *models.ErrorMessage) 
 	return &body, nil
 }
 
-func (v *Validator) CheckUpdateAgrs(issueId string) (*models.UpdateIssueArgs, *models.ErrorMessage) {
+func (v *Validator) CheckUpdateArgs(issueId string) (*models.UpdateIssueArgs, *models.ErrorMessage) {
 	var body models.UpdateIssueArgs
 	err := json.NewDecoder(v.Body).Decode(&body)
 
@@ -82,7 +82,7 @@ func (v *Validator) CheckUpdateAgrs(issueId string) (*models.UpdateIssueArgs, *m
 	return &body, nil
 }
 
-func (v *Validator) CheckListAgrs() (*models.ListArgs, *models.ErrorMessage) {
+func (v *Validator) CheckListArgs() (*models.ListArgs, *models.ErrorMessage) {
 	var body models.ListArgs
 	err := json.NewDecoder(v.Body).Decode(&body)
 

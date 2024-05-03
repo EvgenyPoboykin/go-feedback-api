@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	Log_Ping = "*** Ping database successfuly! ***"
+	Log_Ping = "*** Ping database successfully! ***"
 )
 
 func (c *Connection) TestDBConnection(db *sql.DB) error {

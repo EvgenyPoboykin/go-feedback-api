@@ -8,7 +8,7 @@ type IssueRepository interface {
 	GetById(ctx context.Context, issueId string) (*Issue, error)
 	AddIssueItem(ctx context.Context, params AddIssueArgs) (*Issue, error)
 	UpdateIssue(ctx context.Context, params UpdateIssueArgs) (*Issue, error)
-	FindIsseuByParams(ctx context.Context, params AddIssueArgs) (*Issue, error)
+	FindIssueByParams(ctx context.Context, params AddIssueArgs) (*Issue, error)
 	GetOptions(ctx context.Context) (*[]Option, error)
 	GetOptionByValue(ctx context.Context, value string) (*Option, error)
 }

@@ -16,9 +16,9 @@ import (
 
 func Start() {
 
-	enviroment := env.NewEnv()
+	environment := env.NewEnv()
 
-	conn := connection.NewDBConnection("postgres", enviroment.DSN)
+	conn := connection.NewDBConnection("postgres", environment.DSN)
 	DB := conn.DBConnection()
 
 	pool.SetPool(DB)
@@ -30,7 +30,7 @@ func Start() {
 
 	router.Support(r)
 
-	http.ListenAndServe(enviroment.AppPort, r)
+	http.ListenAndServe(environment.AppPort, r)
 
-	fmt.Printf("Start Server on port : '%s'!", enviroment.AppPort)
+	fmt.Printf("Start Server on port : '%s'!", environment.AppPort)
 }

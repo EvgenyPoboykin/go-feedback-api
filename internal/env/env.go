@@ -21,7 +21,7 @@ type Env struct {
 	EmployeeRole string
 }
 
-var Enviroment *Env
+var Environment *Env
 
 func NewEnv() *Env {
 	if err := godotenv.Load(); err != nil {
@@ -45,7 +45,7 @@ func NewEnv() *Env {
 		"password=%s dbname=%s sslmode=%s",
 		dbHost, dbPort, dbUser, dbPassword, dbName, dbSSL)
 
-	Enviroment = &Env{
+	Environment = &Env{
 		DSN:        psqlInfo,
 		DbName:     dbName,
 		DbUser:     dbUser,
@@ -59,7 +59,7 @@ func NewEnv() *Env {
 		EmployeeRole: employeeRole,
 	}
 
-	return Enviroment
+	return Environment
 }
 
 func checkEnv(value string) string {

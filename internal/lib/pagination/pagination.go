@@ -19,9 +19,9 @@ func Pagination(pageNum int, pageSize int, sliceLength int) (int, int) {
 	return start, end
 }
 
-func IssuePerPage(isseus []models.Issue, body models.ListArgs) []models.Issue {
-	start, end := Pagination(body.Page-1, body.PageSize, len(isseus))
-	pagedSlice := isseus[start:end]
+func IssuePerPage(issues []models.Issue, body models.ListArgs) []models.Issue {
+	start, end := Pagination(body.Page-1, body.PageSize, len(issues))
+	pagedSlice := issues[start:end]
 
 	return pagedSlice
 }

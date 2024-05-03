@@ -12,13 +12,11 @@ func (r *IssueRepository) GetOptions(ctx context.Context) (*[]models.Option, err
 	stmt, errStmt := r.DB.Prepare(queryGetOptions)
 
 	if errStmt != nil {
-		r.Log.Printf(Log_ErrorInsert, errStmt)
 		return nil, errStmt
 	}
 
 	rows, err := stmt.QueryContext(ctx)
 	if err != nil {
-		r.Log.Printf(Log_ErrorSelect, err)
 		return nil, err
 	}
 

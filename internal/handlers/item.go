@@ -23,12 +23,12 @@ func (as ApiSettings) Item(w http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")
 
-	isseu, err := as.conn.GetById(c, id)
+	issue, err := as.conn.GetById(c, id)
 	if err != nil {
-		response.ErrorResponse(w, http.StatusBadRequest, BAD_REQUEST, ResponseMessage_NotFoundIsseu+id)
+		response.ErrorResponse(w, http.StatusBadRequest, BAD_REQUEST, ResponseMessage_NotFoundIssue+id)
 
 		return
 	}
 
-	response.Response(w, isseu)
+	response.Response(w, issue)
 }

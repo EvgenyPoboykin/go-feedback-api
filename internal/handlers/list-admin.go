@@ -24,8 +24,8 @@ func (as ApiSettings) ListAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	validatoion := validator.NewValidtor(r.Body)
-	body, validationError := validatoion.CheckListAgrs()
+	validation := validator.NewValidator(r.Body)
+	body, validationError := validation.CheckListArgs()
 	if validationError != nil {
 		response.ErrorResponse(w, validationError.Status, validationError.Type, validationError.Description)
 
@@ -48,18 +48,18 @@ func (as ApiSettings) ListAdmin(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	isseus, err := as.conn.GetListByAdmin(c)
+	issues, err := as.conn.GetListByAdmin(c)
 	if err != nil {
 		response.ErrorResponse(w, http.StatusServiceUnavailable, SERVICE_RETURN, ResponseMessage_ListError)
 
 		return
 	}
 
-	if isseus != nil {
-		isseusSlice := pagination.IssuePerPage(*isseus, *body)
+	if issues != nil {
+		issuesSlice := pagination.IssuePerPage(*issues, *body)
 
-		page.TotalCount = len(*isseus)
-		page.Issues = isseusSlice
+		page.TotalCount = len(*issues)
+		page.Issues = issuesSlice
 	} else {
 		page.TotalCount = 0
 		page.Issues = empty

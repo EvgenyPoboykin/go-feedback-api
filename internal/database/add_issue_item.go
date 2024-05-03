@@ -11,7 +11,6 @@ func (r *IssueRepository) AddIssueItem(ctx context.Context, params models.AddIss
 	stmt, errStmt := r.DB.Prepare(queryAddIssueItem)
 
 	if errStmt != nil {
-		r.Log.Printf(Log_ErrorInsert, errStmt)
 		return nil, errStmt
 	}
 
@@ -25,15 +24,13 @@ func (r *IssueRepository) AddIssueItem(ctx context.Context, params models.AddIss
 		params.ClientName,
 	)
 	if err != nil {
-		r.Log.Printf(Log_ErrorInsert, err)
 		return nil, err
 	}
 
-	isseu, err := r.FindIsseuByParams(ctx, params)
+	issue, err := r.FindIssueByParams(ctx, params)
 	if err != nil {
-		r.Log.Printf(Log_ErrorInsert, err)
 		return nil, err
 	}
 
-	return isseu, nil
+	return issue, nil
 }

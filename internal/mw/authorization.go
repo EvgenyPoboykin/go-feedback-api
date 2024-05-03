@@ -31,11 +31,11 @@ const (
 
 func containsRole(s []string) string {
 	for _, a := range s {
-		if a == env.Enviroment.EmployeeRole {
+		if a == env.Environment.EmployeeRole {
 			return "employee"
 		}
 
-		if a == env.Enviroment.AdminRole {
+		if a == env.Environment.AdminRole {
 			return "admin"
 		}
 	}

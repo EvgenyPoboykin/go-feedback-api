@@ -11,7 +11,6 @@ func (r *IssueRepository) UpdateIssue(ctx context.Context, params models.UpdateI
 	stmt, errStmt := r.DB.Prepare(queryUpdateIssueItem)
 
 	if errStmt != nil {
-		r.Log.Printf(Log_ErrorInsert, errStmt)
 		return nil, errStmt
 	}
 
@@ -22,15 +21,13 @@ func (r *IssueRepository) UpdateIssue(ctx context.Context, params models.UpdateI
 		params.Id,
 	)
 	if err != nil {
-		r.Log.Printf(Log_ErrorUpdate, err)
 		return nil, err
 	}
 
-	isseu, err := r.GetById(ctx, params.Id)
+	issue, err := r.GetById(ctx, params.Id)
 	if err != nil {
-		r.Log.Printf(Log_ErrorSelect, err)
 		return nil, err
 	}
 
-	return isseu, nil
+	return issue, nil
 }

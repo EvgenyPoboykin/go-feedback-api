@@ -4,10 +4,6 @@ import (
 	"database/sql"
 )
 
-type Conection interface {
-	Connect(dsn string) (*sql.DB, error)
-}
-
 type DBConnection struct {
 	DB *sql.DB
 }

@@ -24,8 +24,8 @@ func (as ApiSettings) Update(w http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")
 
-	validation := validator.NewValidtor(r.Body)
-	body, bodyError := validation.CheckUpdateAgrs(id)
+	validation := validator.NewValidator(r.Body)
+	body, bodyError := validation.CheckUpdateArgs(id)
 	if bodyError != nil {
 		response.ErrorResponse(w, http.StatusServiceUnavailable, SERVICE_PARSE, ResponseMessage_ServiceBodyParser)
 
@@ -41,12 +41,12 @@ func (as ApiSettings) Update(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	isseu, err := as.conn.UpdateIssue(c, *body)
+	issue, err := as.conn.UpdateIssue(c, *body)
 	if err != nil {
-		response.ErrorResponse(w, http.StatusBadGateway, SERVICE_CREATE_ISSEU, ResponseMessage_ServiceUpdateError)
+		response.ErrorResponse(w, http.StatusBadGateway, SERVICE_CREATE_ISSUE, ResponseMessage_ServiceUpdateError)
 
 		return
 	}
 
-	response.Response(w, isseu)
+	response.Response(w, issue)
 }

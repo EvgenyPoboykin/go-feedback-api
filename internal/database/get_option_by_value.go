@@ -12,7 +12,6 @@ func (r *IssueRepository) GetOptionByValue(ctx context.Context, value string) (*
 	stmt, errStmt := r.DB.Prepare(queryGetOptionByValue)
 
 	if errStmt != nil {
-		r.Log.Printf(Log_ErrorInsert, errStmt)
 		return nil, errStmt
 	}
 
@@ -20,7 +19,6 @@ func (r *IssueRepository) GetOptionByValue(ctx context.Context, value string) (*
 
 	err := res.Scan(&option.Value, &option.Label)
 	if err != nil {
-		r.Log.Printf(Log_ErrorSelect, err)
 		return nil, err
 	}
 
