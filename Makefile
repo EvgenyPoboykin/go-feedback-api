@@ -2,15 +2,18 @@
 include .env
 
 APP_NAME=feedback-api-v1
-APP_POST=3333
 
 CONTAINER=feedback-db
 
 POSTGRES_VERSION=postgres:12-alpine
 POSTGRES_VOLUME=pgdata:/var/run/postgresql/data
 
+DSN=postgres://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}?sslmode=${DB_SSL}
 
-db.cotainer:
+swagger:
+	swag init -g ./cmd/main.go -o ./docs
+
+db.container:
 	docker run --name ${CONTAINER} -p ${DB_PORT}:${DB_PORT} -e POSTGRES_PASSWORD=${DB_PASSWORD} -e POSTGRES_USER=${DB_USER} -d ${POSTGRES_VERSION}
 
 db.create:
@@ -29,13 +32,13 @@ container.stop:
 	fi
 
 migrations.create:
-	sqlx migrate add -r init
+	migrate create -ext sql -dir migration/ -seq init
 
 migrations.up:
-	sqlx migrate run --database-url ${DSN}
+	migrate -path migrations/ -database ${DSN} -verbose up
 
 migrations.down:
-	sqlx migrate revert --database-url ${DSN}
+	migrate -path migrations/ -database ${DSN} -verbose down
 
 binary.build:
 	if [ -f "./build/${APP_NAME}" ]; then \
@@ -51,6 +54,8 @@ binary.run: binary.build container.stop container.start
 
 start: binary.run
 
+dev: 
+	go run  cmd/main.go
 stop:
 	@echo "Stopping ${APP_NAME}..."
 	@-pkill -SIGTERM -f "./build/${APP_NAME}"

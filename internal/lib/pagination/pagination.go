@@ -1,7 +1,7 @@
 package pagination
 
 import (
-	"github.com/eugenepoboykin/go-feedback-api/internal/models"
+	"github.com/eugenepoboykin/go-feedback-api/internal/domain/models"
 )
 
 func Pagination(pageNum int, pageSize int, sliceLength int) (int, int) {
@@ -19,7 +19,7 @@ func Pagination(pageNum int, pageSize int, sliceLength int) (int, int) {
 	return start, end
 }
 
-func IssuePerPage(issues []models.Issue, body models.ListArgs) []models.Issue {
+func IssuePerPage(issues []models.ServiceIssue, body models.ServiceListDTO) []models.ServiceIssue {
 	start, end := Pagination(body.Page-1, body.PageSize, len(issues))
 	pagedSlice := issues[start:end]
 

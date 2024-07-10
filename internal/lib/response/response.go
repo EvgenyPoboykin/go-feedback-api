@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/eugenepoboykin/go-feedback-api/internal/models"
+	"github.com/eugenepoboykin/go-feedback-api/internal/errors"
 )
 
 const (
@@ -21,7 +21,7 @@ func Response[T interface{}](w http.ResponseWriter, data *T) {
 	out, errMarshall := json.Marshal(&data)
 
 	if errMarshall != nil {
-		ErrorResponse(w, http.StatusInsufficientStorage, SERVICE_VAliDATE, ResponseMessage_ServerReturnError)
+		ErrorResponse(w, http.StatusInsufficientStorage, *errors.Error(SERVICE_VAliDATE, ResponseMessage_ServerReturnError))
 
 		return
 	}
@@ -31,13 +31,8 @@ func Response[T interface{}](w http.ResponseWriter, data *T) {
 
 }
 
-func ErrorResponse(w http.ResponseWriter, status int, statusType string, description string) {
-	payload, err := json.Marshal(models.ErrorResponse{
-		Type: statusType,
-		Payload: models.ErrorPayloadResponse{
-			Description: description,
-		},
-	})
+func ErrorResponse(w http.ResponseWriter, status int, e errors.ErrorResponse) {
+	payload, err := json.Marshal(e)
 
 	if err != nil {
 		errorLog.Println(ResponseMessage_ServerReturnError, err)

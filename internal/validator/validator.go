@@ -5,7 +5,9 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/eugenepoboykin/go-feedback-api/internal/models"
+	"github.com/eugenepoboykin/go-feedback-api/internal/domain/models"
+
+	"github.com/eugenepoboykin/go-feedback-api/internal/model"
 )
 
 type Validator struct {
@@ -18,12 +20,11 @@ func NewValidator(body io.ReadCloser) *Validator {
 	}
 }
 
-func (v *Validator) CheckAddArgs() (*models.AddIssueArgs, *models.ErrorMessage) {
-	var body models.AddIssueArgs
+func (v *Validator) CheckAddArgs() (*models.StorageAddIssueDTO, *model.ErrorMessage) {
+	var body models.StorageAddIssueDTO
 	err := json.NewDecoder(v.Body).Decode(&body)
-
 	if err != nil {
-		return nil, &models.ErrorMessage{
+		return nil, &model.ErrorMessage{
 			Status:      http.StatusServiceUnavailable,
 			Type:        SERVICE_PARSE,
 			Description: ResponseMessage_ServiceBodyParser,
@@ -31,7 +32,7 @@ func (v *Validator) CheckAddArgs() (*models.AddIssueArgs, *models.ErrorMessage) 
 	}
 
 	if body.Description == "" {
-		return nil, &models.ErrorMessage{
+		return nil, &model.ErrorMessage{
 			Status:      http.StatusBadRequest,
 			Type:        FIELD_DESCRIPTION,
 			Description: ResponseMessage_DescriptionError,
@@ -39,7 +40,7 @@ func (v *Validator) CheckAddArgs() (*models.AddIssueArgs, *models.ErrorMessage) 
 	}
 
 	if body.Uri == "" {
-		return nil, &models.ErrorMessage{
+		return nil, &model.ErrorMessage{
 			Status:      http.StatusBadRequest,
 			Type:        FIELD_URI,
 			Description: ResponseMessage_UriError,
@@ -49,12 +50,11 @@ func (v *Validator) CheckAddArgs() (*models.AddIssueArgs, *models.ErrorMessage) 
 	return &body, nil
 }
 
-func (v *Validator) CheckUpdateArgs(issueId string) (*models.UpdateIssueArgs, *models.ErrorMessage) {
-	var body models.UpdateIssueArgs
+func (v *Validator) CheckUpdateArgs(issueId string) (*models.StorageUpdateIssueDTO, *model.ErrorMessage) {
+	var body models.StorageUpdateIssueDTO
 	err := json.NewDecoder(v.Body).Decode(&body)
-
 	if err != nil {
-		return nil, &models.ErrorMessage{
+		return nil, &model.ErrorMessage{
 			Status:      http.StatusServiceUnavailable,
 			Type:        SERVICE_PARSE,
 			Description: ResponseMessage_ServiceBodyParser,
@@ -62,15 +62,15 @@ func (v *Validator) CheckUpdateArgs(issueId string) (*models.UpdateIssueArgs, *m
 	}
 
 	if issueId == "" {
-		return nil, &models.ErrorMessage{
+		return nil, &model.ErrorMessage{
 			Status:      http.StatusServiceUnavailable,
 			Type:        SERVICE_PARSE,
 			Description: ResponseMessage_ParamsIdError,
 		}
 	}
 
-	if body.Status == "" {
-		return nil, &models.ErrorMessage{
+	if body.Status == nil {
+		return nil, &model.ErrorMessage{
 			Status:      http.StatusServiceUnavailable,
 			Type:        SERVICE_PARSE,
 			Description: ResponseMessage_StatusError,
@@ -82,12 +82,11 @@ func (v *Validator) CheckUpdateArgs(issueId string) (*models.UpdateIssueArgs, *m
 	return &body, nil
 }
 
-func (v *Validator) CheckListArgs() (*models.ListArgs, *models.ErrorMessage) {
-	var body models.ListArgs
+func (v *Validator) CheckListArgs() (*models.StorageListDTO, *model.ErrorMessage) {
+	var body models.StorageListDTO
 	err := json.NewDecoder(v.Body).Decode(&body)
-
 	if err != nil {
-		return nil, &models.ErrorMessage{
+		return nil, &model.ErrorMessage{
 			Status:      http.StatusServiceUnavailable,
 			Type:        SERVICE_PARSE,
 			Description: ResponseMessage_ServiceBodyParser,
@@ -95,7 +94,7 @@ func (v *Validator) CheckListArgs() (*models.ListArgs, *models.ErrorMessage) {
 	}
 
 	if body.Page == 0 {
-		return nil, &models.ErrorMessage{
+		return nil, &model.ErrorMessage{
 			Status:      http.StatusServiceUnavailable,
 			Type:        SERVICE_PARSE,
 			Description: ResponseMessage_StatusError,
@@ -103,7 +102,7 @@ func (v *Validator) CheckListArgs() (*models.ListArgs, *models.ErrorMessage) {
 	}
 
 	if body.PageSize == 0 {
-		return nil, &models.ErrorMessage{
+		return nil, &model.ErrorMessage{
 			Status:      http.StatusServiceUnavailable,
 			Type:        SERVICE_PARSE,
 			Description: ResponseMessage_StatusError,

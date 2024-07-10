@@ -2,32 +2,32 @@ package endpoints
 
 import "fmt"
 
-type Api struct {
+type Endpoints struct {
 	BaseUrl string
 }
 
-func NewApiVersion(version string) *Api {
-	return &Api{
+func NewEndpoints(version string) *Endpoints {
+	return &Endpoints{
 		BaseUrl: fmt.Sprintf("/api/%s", version),
 	}
 }
 
-func (a *Api) ListAdmin() string {
+func (a *Endpoints) ListAdmin() string {
 	return a.BaseUrl + "/list/admin"
 }
 
-func (a *Api) ListEmployee() string {
+func (a *Endpoints) ListEmployee() string {
 	return a.BaseUrl + "/list/employee"
 }
 
-func (a *Api) Item() string {
+func (a *Endpoints) Item() string {
 	return a.BaseUrl + "/list/issue/{id}"
 }
 
-func (a *Api) Create() string {
+func (a *Endpoints) Create() string {
 	return a.BaseUrl + "/list/issue/create"
 }
 
-func (a *Api) Options() string {
+func (a *Endpoints) Options() string {
 	return a.BaseUrl + "/options"
 }
