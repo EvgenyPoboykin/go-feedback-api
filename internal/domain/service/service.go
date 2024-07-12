@@ -14,7 +14,8 @@ import (
 )
 
 type IssueStorage interface {
-	List(ctx context.Context, clientId *string) (*[]models.StorageIssue, error)
+	ListAdmin(ctx context.Context) (*[]models.StorageIssue, error)
+	ListEmployee(ctx context.Context, clientId *string) (*[]models.StorageIssue, error)
 	IssueById(ctx context.Context, issueId string) (*models.StorageIssue, error)
 	Create(ctx context.Context, params models.StorageAddIssueDTO) (*models.StorageIssue, error)
 	Update(ctx context.Context, params models.StorageUpdateIssueDTO) (*models.StorageIssue, error)
@@ -59,7 +60,7 @@ func (s Service) ListAdmin(ctx context.Context, role string, body io.ReadCloser)
 	page.PageSize = params.PageSize
 	page.Status = params.Status
 
-	issues, err := s.storage.List(ctx, nil)
+	issues, err := s.storage.ListAdmin(ctx)
 	if err != nil {
 		return nil, errors.Error(ServiceReturn, ResponseMessage_ListError)
 	}
@@ -102,7 +103,7 @@ func (s Service) ListEmployee(ctx context.Context, role string, clientId string,
 	page.PageSize = params.PageSize
 	page.Status = params.Status
 
-	issues, err := s.storage.List(ctx, &clientId)
+	issues, err := s.storage.ListEmployee(ctx, &clientId)
 	if err != nil {
 		return nil, errors.Error(ServiceReturn, ResponseMessage_ListError)
 	}

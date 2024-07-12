@@ -1,4 +1,4 @@
-package registry
+package postgres
 
 import (
 	"context"
@@ -9,7 +9,6 @@ import (
 
 	"github.com/eugenepoboykin/go-feedback-api/internal/domain/env"
 	"github.com/eugenepoboykin/go-feedback-api/internal/domain/handlers"
-	"github.com/eugenepoboykin/go-feedback-api/internal/domain/provider"
 	serviceIssue "github.com/eugenepoboykin/go-feedback-api/internal/domain/service"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -39,7 +38,7 @@ func NewRegistry(ctx context.Context) (*Registry, error) {
 }
 
 func (r *Registry) ServiceInit(ctx context.Context) (*serviceIssue.Service, error) {
-	s := provider.NewProvider(ctx)
+	s := NewProvider(ctx)
 
 	service, err := s.Registry()
 	if err != nil {

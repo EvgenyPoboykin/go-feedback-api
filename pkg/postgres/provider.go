@@ -1,10 +1,10 @@
-package provider
+package postgres
 
 import (
 	"context"
+
 	"github.com/eugenepoboykin/go-feedback-api/internal/domain/service"
 	"github.com/eugenepoboykin/go-feedback-api/internal/domain/storage"
-	"github.com/eugenepoboykin/go-feedback-api/pkg/client"
 )
 
 type Provider struct {
@@ -18,13 +18,15 @@ func NewProvider(ctx context.Context) *Provider {
 }
 
 func (p *Provider) Registry() (*service.Service, error) {
-
-	db, err := client.NewPostgresRepository("postgres", PostgresDsn())
+	db, err := NewPostgresClient(p.ctx, PostgresDsn())
 	if err != nil {
 		return nil, err
 	}
 
-	repo := storage.NewRepository(db.DB)
+	repo, err := storage.NewRepository(db.Pool)
+	if err != nil {
+		return nil, err
+	}
 
 	s, err := service.NewService(repo)
 	if err != nil {
@@ -32,5 +34,4 @@ func (p *Provider) Registry() (*service.Service, error) {
 	}
 
 	return s, nil
-
 }

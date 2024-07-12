@@ -2,31 +2,34 @@ package storage
 
 import (
 	"context"
-	"database/sql"
+	"fmt"
+	"reflect"
 	"time"
 
+	globalErrors "errors"
+
 	"github.com/eugenepoboykin/go-feedback-api/internal/domain/models"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Repository struct {
-	DB *sql.DB
+	Pool *pgxpool.Pool
 }
 
-func NewRepository(db *sql.DB) *Repository {
-	return &Repository{
-		DB: db,
+func NewRepository(pool *pgxpool.Pool) (*Repository, error) {
+	if pool == nil {
+		return nil, globalErrors.New("no db connection")
 	}
+
+	return &Repository{
+		Pool: pool,
+	}, nil
 }
 
-func (r *Repository) List(ctx context.Context, clientId *string) (*[]models.StorageIssue, error) {
+func (r *Repository) ListAdmin(ctx context.Context) (*[]models.StorageIssue, error) {
 	var issues []models.StorageIssue
 
-	stmt, errStmt := StmtByRole(r.DB, clientId)
-	if errStmt != nil {
-		return nil, errStmt
-	}
-
-	rows, err := stmt.QueryContext(ctx)
+	rows, err := r.Pool.Query(ctx, QueryListByAdmin)
 	if err != nil {
 		return nil, err
 	}
@@ -45,15 +48,36 @@ func (r *Repository) List(ctx context.Context, clientId *string) (*[]models.Stor
 	return &issues, nil
 }
 
+func (r *Repository) ListEmployee(ctx context.Context, clientId *string) (*[]models.StorageIssue, error) {
+	var issues []models.StorageIssue
+
+	fmt.Print("i`m here", r.Pool)
+	rows, err := r.Pool.Query(ctx, QueryListByEmployee, clientId)
+	fmt.Println(reflect.TypeOf(rows))
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var issue models.StorageIssue
+
+		err := rows.Scan(&issue.Id, &issue.Uri)
+		if err != nil {
+			return nil, err
+		}
+
+		issues = append(issues, issue)
+	}
+
+	return &issues, nil
+}
+
 func (r *Repository) IssueById(ctx context.Context, issueId string) (*models.StorageIssue, error) {
 	var issue models.StorageIssue
 
-	stmt, errStmt := r.DB.Prepare(QueryGetById)
-	if errStmt != nil {
-		return nil, errStmt
-	}
-
-	res := stmt.QueryRowContext(ctx, issueId)
+	res := r.Pool.QueryRow(ctx, QueryGetById, issueId)
 
 	err := res.Scan(&issue.Id, &issue.Uri, &issue.Image64, &issue.Description, &issue.Comment, &issue.Status, &issue.Created, &issue.Updated, &issue.ClientId, &issue.ClientName)
 	if err != nil {
@@ -66,12 +90,7 @@ func (r *Repository) IssueById(ctx context.Context, issueId string) (*models.Sto
 func (r *Repository) IssueByParams(ctx context.Context, params models.StorageAddIssueDTO) (*models.StorageIssue, error) {
 	var issue models.StorageIssue
 
-	stmt, errStmt := r.DB.Prepare(QueryFindIssueByParams)
-	if errStmt != nil {
-		return nil, errStmt
-	}
-
-	res := stmt.QueryRowContext(ctx, params.Uri, params.Image64, params.Description, params.ClientId, params.ClientName)
+	res := r.Pool.QueryRow(ctx, QueryFindIssueByParams, params.Uri, params.Image64, params.Description, params.ClientId, params.ClientName)
 
 	err := res.Scan(&issue.Id, &issue.Uri, &issue.Image64, &issue.Description, &issue.Comment, &issue.Status, &issue.Created, &issue.Updated, &issue.ClientId, &issue.ClientName)
 	if err != nil {
@@ -82,12 +101,7 @@ func (r *Repository) IssueByParams(ctx context.Context, params models.StorageAdd
 }
 
 func (r *Repository) Create(ctx context.Context, params models.StorageAddIssueDTO) (*models.StorageIssue, error) {
-	stmt, errStmt := r.DB.Prepare(QueryAddIssueItem)
-	if errStmt != nil {
-		return nil, errStmt
-	}
-
-	_, err := stmt.ExecContext(ctx,
+	_, err := r.Pool.Exec(ctx, QueryAddIssueItem,
 		params.Uri,
 		params.Image64,
 		params.Description,
@@ -109,12 +123,7 @@ func (r *Repository) Create(ctx context.Context, params models.StorageAddIssueDT
 }
 
 func (r *Repository) Update(ctx context.Context, params models.StorageUpdateIssueDTO) (*models.StorageIssue, error) {
-	stmt, errStmt := r.DB.Prepare(QueryUpdateIssueItem)
-	if errStmt != nil {
-		return nil, errStmt
-	}
-
-	_, err := stmt.ExecContext(ctx,
+	_, err := r.Pool.Exec(ctx, QueryUpdateIssueItem,
 		params.Comment,
 		params.Status,
 		time.Now(),
@@ -135,12 +144,7 @@ func (r *Repository) Update(ctx context.Context, params models.StorageUpdateIssu
 func (r *Repository) Options(ctx context.Context) (*[]models.StorageOption, error) {
 	var options []models.StorageOption
 
-	stmt, errStmt := r.DB.Prepare(QueryGetOptions)
-	if errStmt != nil {
-		return nil, errStmt
-	}
-
-	rows, err := stmt.QueryContext(ctx)
+	rows, err := r.Pool.Query(ctx, QueryGetOptions)
 	if err != nil {
 		return nil, err
 	}
@@ -165,12 +169,7 @@ func (r *Repository) Options(ctx context.Context) (*[]models.StorageOption, erro
 func (r *Repository) OptionByValue(ctx context.Context, value string) (*models.StorageOption, error) {
 	var option models.StorageOption
 
-	stmt, errStmt := r.DB.Prepare(QueryGetOptionByValue)
-	if errStmt != nil {
-		return nil, errStmt
-	}
-
-	res := stmt.QueryRowContext(ctx, value)
+	res := r.Pool.QueryRow(ctx, QueryGetOptionByValue, value)
 
 	err := res.Scan(&option.Value, &option.Label)
 	if err != nil {

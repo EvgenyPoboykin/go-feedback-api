@@ -1,7 +1,8 @@
-package provider
+package postgres
 
 import (
 	"fmt"
+
 	"github.com/eugenepoboykin/go-feedback-api/internal/domain/env"
 )
 
